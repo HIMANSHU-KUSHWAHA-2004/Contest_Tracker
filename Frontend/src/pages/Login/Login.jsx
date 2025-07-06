@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import './Login.css';
 import { useNavigate, Link } from 'react-router-dom';
 
+// ✅ Use environment variable
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
@@ -9,7 +12,7 @@ const Login = () => {
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await fetch('http://localhost:5000/api/login', {
+    const res = await fetch(`${BASE_URL}/api/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
@@ -17,9 +20,9 @@ const Login = () => {
     const data = await res.json();
     if (res.ok) {
       alert('Login successful!');
-      localStorage.setItem('token', data.token);               // ⬅️ Store JWT
-      localStorage.setItem('user', JSON.stringify(data.user)); // ⬅️ Store user info
-      navigate('/dashboard');                                  // ⬅️ Redirect
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      navigate('/dashboard');
     } else {
       alert(data.error || 'Login failed');
     }
