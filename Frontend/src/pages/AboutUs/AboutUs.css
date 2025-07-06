@@ -1,0 +1,89 @@
+.about-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  color: #f3f4f6;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.about-heading {
+  font-size: 2.8rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 40px;
+  color: #60a5fa;
+}
+
+.about-section {
+  margin-bottom: 40px;
+}
+
+.about-section h2 {
+  font-size: 1.6rem;
+  color: #facc15;
+  margin-bottom: 12px;
+}
+
+.about-section p,
+.about-section ul {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: #e2e8f0;
+}
+
+.about-section ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.about-section ul li::before {
+  content: "⟶ ";
+  color: #34d399;
+  margin-right: 6px;
+}
+
+.platform {
+  background: linear-gradient(to right, #34d399, #3b82f6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: bold;
+}
+
+.motivation-quote blockquote {
+  font-style: italic;
+  font-size: 1.2rem;
+  color: #93c5fd;
+  border-left: 4px solid #3b82f6;
+  padding-left: 16px;
+  margin-top: 10px;
+}
+
+.signature {
+  margin-top: 10px;
+  font-size: 1rem;
+  text-align: right;
+  color: #f472b6;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .about-heading {
+    font-size: 2.2rem;
+  }
+
+  .about-section h2 {
+    font-size: 1.3rem;
+  }
+
+  .about-section p {
+    font-size: 1rem;
+  }
+
+  .motivation-quote blockquote {
+    font-size: 1rem;
+  }
+}

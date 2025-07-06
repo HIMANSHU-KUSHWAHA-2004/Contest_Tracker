@@ -1,0 +1,53 @@
+.inform-container {
+  max-width: 500px;
+  margin: 40px auto;
+  background: #f7f7f7;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+.inform-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.inform-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.inform-form label {
+  margin: 10px 0 5px;
+  font-weight: 500;
+}
+
+.inform-form select,
+.inform-form input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.inform-form button {
+  margin-top: 20px;
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.inform-form button:hover {
+  background-color: #0056b3;
+}
+
+.inform-message {
+  margin-top: 15px;
+  text-align: center;
+  color: green;
+}
