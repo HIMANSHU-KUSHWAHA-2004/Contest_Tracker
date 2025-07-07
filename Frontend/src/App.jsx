@@ -21,7 +21,14 @@ const AppWrapper = () => {
   const hideSidebarOn = ["/", "/register"]; // Pages without sidebar/footer
   const isHidden = hideSidebarOn.includes(location.pathname);
 
-  const isAuthenticated = localStorage.getItem("token");
+  // Better authentication check
+  const token = localStorage.getItem("token");
+  const isAuthenticated = token !== null && token !== undefined && token !== '';
+
+  // Debug logging (remove in production)
+  console.log("Current path:", location.pathname);
+  console.log("Token:", token);
+  console.log("Is authenticated:", isAuthenticated);
 
   return (
     <>
@@ -32,16 +39,18 @@ const AppWrapper = () => {
         <Route path="/register" element={<Register />} />
         <Route
           path="/dashboard"
-          element={isAuthenticated ? <Dashboard /> : <Navigate to="/" />}
+          element={isAuthenticated ? <Dashboard /> : <Navigate to="/" replace />}
         />
         <Route
           path="/calendar"
-          element={isAuthenticated ? <Calendar /> : <Navigate to="/" />}
+          element={isAuthenticated ? <Calendar /> : <Navigate to="/" replace />}
         />
         <Route
           path="/about"
-          element={isAuthenticated ? <AboutUs /> : <Navigate to="/" />}
+          element={isAuthenticated ? <AboutUs /> : <Navigate to="/" replace />}
         />
+        {/* Catch-all route for debugging */}
+        <Route path="*" element={<div>404 - Page not found</div>} />
       </Routes>
 
       {!isHidden && <Footer />}
