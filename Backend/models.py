@@ -1,3 +1,4 @@
+import os
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -14,7 +15,7 @@ class User(Base):
     password = Column(String(255), nullable=False)
 
 # Database setup
-DATABASE_URL = "sqlite:///./app.db"
+DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///app.db')
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
