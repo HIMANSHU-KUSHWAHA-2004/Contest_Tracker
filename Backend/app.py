@@ -24,7 +24,7 @@ jwt = JWTManager(app)
 app.register_blueprint(auth_bp, url_prefix="/api")
 
 # API Routes
-@app.route("/api/home", methods=["GET"])  # Changed from "/"
+@app.route("/api/home", methods=["GET"])
 def home():
     return jsonify({"message": "Auth API running"}), 200
 
@@ -59,17 +59,32 @@ def download_db():
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve(path):
+    print(f"🔍 Serving path: '{path}'")  # Debug log
+    print(f"📁 Static folder: {app.static_folder}")  # Debug log
+    
     # If it's an API route, return 404
     if path.startswith('api/'):
         return jsonify({"error": "API endpoint not found"}), 404
     
+    # Check if static folder exists
+    if not os.path.exists(app.static_folder):
+        print(f"❌ Static folder doesn't exist: {app.static_folder}")
+        return jsonify({"error": "Static folder not found"}), 500
+    
     # If file exists in dist folder, serve it
     if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
+        print(f"📄 Serving file: {path}")
         return send_from_directory(app.static_folder, path)
     else:
         # For all other routes, serve React's index.html
-        return send_from_directory(app.static_folder, 'index.html')
+        index_path = os.path.join(app.static_folder, 'index.html')
+        if os.path.exists(index_path):
+            print(f"🏠 Serving index.html for path: {path}")
+            return send_from_directory(app.static_folder, 'index.html')
+        else:
+            print(f"❌ index.html not found at: {index_path}")
+            return jsonify({"error": "index.html not found"}), 500
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=port, debug=True)  # Added debug=True
