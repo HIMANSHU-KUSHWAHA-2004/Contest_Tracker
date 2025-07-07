@@ -2,19 +2,12 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 export default defineConfig({
-  base: '/', // ✅ CRITICAL: ensures JS loads correctly on all routes
+  base: '/', // ✅ Very important
   plugins: [react()],
   build: {
     outDir: 'dist',
     rollupOptions: {
-      input: {
-        main: './index.html',
-      },
+      input: './index.html', // ✅ No need for input.main, just use string
     },
-  },
-  preview: {
-    port: 3000,
-    strictPort: true,
-    host: true,
   },
 })
