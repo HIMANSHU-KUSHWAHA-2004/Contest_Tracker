@@ -46,6 +46,16 @@ def get_contests():  # ✅ renamed to avoid collision
             "message": "Failed to fetch contests"
         }), 500
 
+
+from flask import send_file
+
+@app.route('/download-db', methods=['GET'])
+def download_db():
+    try:
+        return send_file('app.db', as_attachment=True)
+    except Exception as e:
+        return {"error": str(e)}
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))  # required by Render
     app.run(host="0.0.0.0", port=port)
