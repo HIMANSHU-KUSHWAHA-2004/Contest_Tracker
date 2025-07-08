@@ -11,7 +11,10 @@ app = Flask(__name__)
 CORS(app)
 
 # Initialize database
-init_db()
+try:
+    init_db()
+except Exception as e:
+    print(f"❌ Database initialization failed: {e}")
 
 # JWT setup
 app.config["JWT_SECRET_KEY"] = os.environ.get("JWT_SECRET_KEY", "your-secret-key-123")
