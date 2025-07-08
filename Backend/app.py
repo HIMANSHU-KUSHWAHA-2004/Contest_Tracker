@@ -7,20 +7,22 @@ from auth import auth_bp
 from models import init_db
 import os
 
-app = Flask(__name__)
+# Try to serve static frontend only if it exists
+frontend_build_path = os.path.abspath("../Frontend/dist")
+serve_frontend = os.path.exists(frontend_build_path)
 
-# ✅ Updated CORS - Replace with your actual Render URLs
-CORS(app, origins=[
-    "https://your-frontend-name.onrender.com",  # Replace with your actual frontend URL
-    "http://localhost:5173",  # For local development
-    "http://localhost:3000",  # Alternative local port
-])
+app = Flask(
+    __name__,
+    static_folder=frontend_build_path if serve_frontend else None,
+    static_url_path="" if serve_frontend else None
+)
+CORS(app)
 
 # Initialize database
 init_db()
 
 # JWT setup
-app.config["JWT_SECRET_KEY"] = os.environ.get("JWT_SECRET_KEY", "your-secret-key-123")
+app.config["JWT_SECRET_KEY"] = "your-secret-key-123"
 jwt = JWTManager(app)
 
 # Register auth routes
@@ -29,10 +31,6 @@ app.register_blueprint(auth_bp, url_prefix="/api")
 # -------------------------
 # ✅ API ROUTES
 # -------------------------
-
-@app.route("/api/health", methods=["GET"])
-def health_check():
-    return jsonify({"status": "healthy", "message": "Backend is running"}), 200
 
 @app.route("/api/home", methods=["GET"])
 def home():
@@ -58,22 +56,34 @@ def download_db():
         return jsonify({"error": str(e)}), 500
 
 # -------------------------
-# ✅ Error Handlers
+# ✅ SPA Routing (Only if frontend exists)
 # -------------------------
 
-@app.errorhandler(404)
-def not_found(error):
-    return jsonify({"error": "API endpoint not found"}), 404
+if serve_frontend:
+    @app.route("/", defaults={"path": ""})
+    @app.route("/<path:path>")
+    def serve_react(path):
+        if path.startswith("api/"):
+            return jsonify({"error": "API endpoint not found"}), 404
 
-@app.errorhandler(500)
-def internal_error(error):
-    return jsonify({"error": "Internal server error"}), 500
+        # If exact file exists in dist, serve it
+        requested_path = os.path.join(app.static_folder, path)
+        if os.path.exists(requested_path):
+            return send_from_directory(app.static_folder, path)
 
-# -------------------------
-# ✅ Production Configuration
-# -------------------------
+        # Fallback to index.html
+        index_file = os.path.join(app.static_folder, "index.html")
+        if os.path.exists(index_file):
+            return send_from_directory(app.static_folder, "index.html")
+        else:
+            return jsonify({"error": "index.html not found"}), 500
+
+else:
+    @app.route("/", defaults={"path": ""})
+    @app.route("/<path:path>")
+    def fallback_api(path):
+        return jsonify({"error": "Frontend not available"}), 501
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    debug_mode = os.environ.get("FLASK_ENV") == "development"
-    app.run(host="0.0.0.0", port=port, debug=debug_mode)
+    app.run(host="0.0.0.0", port=port, debug=True)
