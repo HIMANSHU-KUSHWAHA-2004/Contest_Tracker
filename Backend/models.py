@@ -14,8 +14,9 @@ class User(Base):
     email = Column(String(100), unique=True, nullable=False)
     password = Column(String(255), nullable=False)
 
-# Production database connection
-DATABASE_URL = os.getenv('DATABASE_URL')
+# Use SQLite locally, PostgreSQL in production
+DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///app.db')
+
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
