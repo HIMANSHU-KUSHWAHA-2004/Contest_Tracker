@@ -3,7 +3,7 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
-from models import db, init_db
+from models import init_db  # ✅ only init_db needed
 from auth import auth_bp
 from clist_api import fetch_contests
 import os
@@ -11,21 +11,20 @@ import os
 app = Flask(__name__)
 CORS(app)
 
-# ✅ PostgreSQL only — no SQLite fallback
+# ✅ PostgreSQL (read from environment)
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
-# ✅ Initialize database
-init_db(app)
 
 # ✅ JWT setup
 app.config["JWT_SECRET_KEY"] = "your-secret-key-123"
 jwt = JWTManager(app)
 
-# ✅ Register Blueprints
+# ✅ Init DB (uses SQLAlchemy Core, not Flask-SQLAlchemy)
+init_db()
+
+# ✅ Register auth routes
 app.register_blueprint(auth_bp, url_prefix="/api")
 
-# ✅ Routes
 @app.route("/", methods=["GET"])
 def home():
     return jsonify({"message": "Auth API running"}), 200
