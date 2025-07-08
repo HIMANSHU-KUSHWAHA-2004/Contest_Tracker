@@ -23,13 +23,24 @@ def home():
 
 # ✅ Add this route
 @app.route("/api/contests", methods=["GET"])
-def get_contests():
+def get_contests():  # ✅ renamed to avoid collision
     try:
-        contests = fetch_contests()
-        return jsonify(contests or {"message": "No contests found"}), 200
+        contests = fetch_contests()  # ✅ now correctly calls imported function
+        
+        if not contests:
+            return jsonify({
+                "message": "No contests found or error fetching data",
+                "contests": []
+            }), 200
+            
+        return jsonify(contests), 200
+        
     except Exception as e:
-        print("❌ Error fetching contests:", e)
-        return jsonify({"error": "Internal server error"}), 500
+        print(f"❌ Error in get_contests endpoint: {e}")
+        return jsonify({
+            "error": "Internal server error",
+            "message": "Failed to fetch contests"
+        }), 500
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
