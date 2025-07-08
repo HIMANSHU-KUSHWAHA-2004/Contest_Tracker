@@ -15,7 +15,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # ✅ Initialize DB
-init_db(app)
+init_db()
 
 # ✅ JWT Setup
 app.config["JWT_SECRET_KEY"] = "your-secret-key-123"
