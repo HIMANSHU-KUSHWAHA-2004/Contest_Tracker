@@ -1,7 +1,9 @@
+# Backend/app.py
+
 from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
-from models import db
+from models import db, init_db
 from auth import auth_bp
 from clist_api import fetch_contests
 import os
@@ -9,22 +11,21 @@ import os
 app = Flask(__name__)
 CORS(app)
 
-# ✅ Only use PostgreSQL from environment
+# ✅ PostgreSQL only — no SQLite fallback
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-# ✅ Init and create tables
-db.init_app(app)
-with app.app_context():
-    db.create_all()
+# ✅ Initialize database
+init_db(app)
 
-# ✅ JWT
+# ✅ JWT setup
 app.config["JWT_SECRET_KEY"] = "your-secret-key-123"
 jwt = JWTManager(app)
 
-# ✅ Routes
+# ✅ Register Blueprints
 app.register_blueprint(auth_bp, url_prefix="/api")
 
+# ✅ Routes
 @app.route("/", methods=["GET"])
 def home():
     return jsonify({"message": "Auth API running"}), 200
@@ -35,6 +36,7 @@ def get_contests():
         contests = fetch_contests()
         return jsonify(contests or {"message": "No contests found"}), 200
     except Exception as e:
+        print("❌ Error fetching contests:", e)
         return jsonify({"error": "Internal server error"}), 500
 
 if __name__ == "__main__":
