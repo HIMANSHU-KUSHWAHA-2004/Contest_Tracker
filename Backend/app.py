@@ -8,18 +8,21 @@ import os
 app = Flask(__name__)
 CORS(app)
 
-# Initialize database
+# 🛢️ Database config
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["JWT_SECRET_KEY"] = os.environ.get("JWT_SECRET_KEY", "your-secret-key-123")
+
+# ✅ Initialize the database
 try:
     init_db()
     print("✅ Database initialized")
 except Exception as e:
     print(f"❌ Database error: {e}")
 
-# JWT setup
-app.config["JWT_SECRET_KEY"] = os.environ.get("JWT_SECRET_KEY", "your-secret-key-123")
+# ✅ JWT setup
 jwt = JWTManager(app)
 
-# Register auth routes
+# ✅ Register your authentication routes
 app.register_blueprint(auth_bp, url_prefix="/api")
 
 @app.route("/")
