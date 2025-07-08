@@ -1,4 +1,3 @@
-import os
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -14,17 +13,10 @@ class User(Base):
     email = Column(String(100), unique=True, nullable=False)
     password = Column(String(255), nullable=False)
 
-# Use SQLite locally, PostgreSQL in production
-DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///app.db')
-
-# ✅ Ensure PostgreSQL works with SSL (Render requires it)
-if DATABASE_URL.startswith("postgres://"):
-    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://")
-
-engine = create_engine(DATABASE_URL, connect_args={"sslmode": "require"} if "postgresql" in DATABASE_URL else {})
+# Database setup
+DATABASE_URL = "sqlite:///./app.db"
+engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def init_db():
-    print("📦 Creating tables...")
     Base.metadata.create_all(bind=engine)
-    print("✅ Tables created successfully.")
