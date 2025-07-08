@@ -14,8 +14,13 @@ class User(Base):
     email = Column(String(100), unique=True, nullable=False)
     password = Column(String(255), nullable=False)
 
-# Database setup
+# Database setup - Fix PostgreSQL URL
 DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///app.db')
+
+# Convert postgresql:// to postgresql+psycopg2:// for SQLAlchemy
+if DATABASE_URL.startswith('postgresql://'):
+    DATABASE_URL = DATABASE_URL.replace('postgresql://', 'postgresql+psycopg2://')
+
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
