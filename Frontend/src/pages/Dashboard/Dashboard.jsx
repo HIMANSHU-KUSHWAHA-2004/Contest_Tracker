@@ -9,7 +9,6 @@ const Dashboard = () => {
   const [selectedHost, setSelectedHost] = useState("all");
   const [sortBy, setSortBy] = useState("start");
 
-  // API endpoint - replace with your actual backend URL
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   const fetchContests = async () => {
@@ -37,12 +36,9 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
     fetchContests();
   }, []);
 
-  // ✅ Fixed: Format UTC date to readable IST time
   const formatDate = (dateString) => {
-    // Parse as UTC by adding 'Z' if not present
     const utcDate = new Date(dateString.endsWith('Z') ? dateString : dateString + 'Z');
     
-    // Convert to IST using toLocaleString with Indian timezone
     return utcDate.toLocaleString("en-IN", {
       timeZone: "Asia/Kolkata",
       weekday: "short",
@@ -54,7 +50,6 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
     });
   };
 
-  // ✅ Fixed: Calculate contest duration
   const getDuration = (start, end) => {
     const startDate = new Date(start.endsWith('Z') ? start : start + 'Z');
     const endDate = new Date(end.endsWith('Z') ? end : end + 'Z');
@@ -73,7 +68,6 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
     return result.join(" ");
   };
 
-  // ✅ Fixed: Time remaining until contest starts
   const getTimeUntilStart = (start) => {
     const now = new Date();
     const startDate = new Date(start.endsWith('Z') ? start : start + 'Z');
@@ -127,7 +121,6 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
     const matchesHostFilter =
       selectedHost === "all" || contest.host === selectedHost;
 
-    // ✅ Only include contests that have not ended yet
     return (
       end.getTime() > now.getTime() &&
       (matchesEvent || matchesHostName) &&

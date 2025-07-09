@@ -42,7 +42,6 @@ def fetch_contests():
                     "url": c["href"]
                 })
 
-        # Sort contests by start time (earliest first)
         contests.sort(key=lambda x: x["start"])
         
         return contests
@@ -53,10 +52,8 @@ def fetch_contests():
 
 # Alternative approach: If you want to show contests that are ongoing or upcoming
 def fetch_contests_including_ongoing():
-    # Get current UTC time for filtering
     now_utc = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S")
     
-    # Fetch contests that haven't ended yet (end time > current time)
     url = f"https://clist.by/api/v4/contest/?end__gt={now_utc}&limit=100&format=json"
     headers = {
         "Authorization": f"ApiKey {USERNAME}:{API_KEY}"
@@ -76,7 +73,6 @@ def fetch_contests_including_ongoing():
                 start_time = datetime.fromisoformat(c["start"].replace('Z', '+00:00'))
                 end_time = datetime.fromisoformat(c["end"].replace('Z', '+00:00'))
                 
-                # Only include if contest hasn't ended
                 if end_time > current_time:
                     contests.append({
                         "event": c["event"],
@@ -87,7 +83,6 @@ def fetch_contests_including_ongoing():
                         "status": "ongoing" if start_time <= current_time else "upcoming"
                     })
 
-        # Sort contests by start time (earliest first)
         contests.sort(key=lambda x: x["start"])
         
         return contests
@@ -96,7 +91,6 @@ def fetch_contests_including_ongoing():
         print("❌ Error fetching contests:", e)
         return []
 
-# Test function to see what contests are returned
 def test_fetch():
     print("🔍 Fetching upcoming contests...")
     contests = fetch_contests()

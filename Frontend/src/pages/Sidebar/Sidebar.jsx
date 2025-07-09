@@ -22,13 +22,11 @@ const Sidebar = () => {
   };
 
   const handleLogout = () => {
-    // Add your logout logic here
     localStorage.removeItem('token'); // or however you store auth
     navigate('/');
     closeSidebar();
   };
 
-  // Close sidebar when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (sidebarRef.current && !sidebarRef.current.contains(event.target) && !event.target.closest('.hamburger-btn')) {

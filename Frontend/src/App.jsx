@@ -15,17 +15,14 @@ import Sidebar from "./pages/Sidebar/Sidebar";
 import Footer from "./pages/Footer/Footer";
 import AboutUs from "./pages/AboutUs/AboutUs";
 
-// 🔄 Wrapper component to show Sidebar and Footer conditionally
 const AppWrapper = () => {
   const location = useLocation();
-  const hideSidebarOn = ["/", "/register"]; // Pages without sidebar/footer
+  const hideSidebarOn = ["/", "/register"]; 
   const isHidden = hideSidebarOn.includes(location.pathname);
 
-  // Better authentication check
   const token = localStorage.getItem("token");
   const isAuthenticated = token !== null && token !== undefined && token !== '';
 
-  // Debug logging (remove in production)
   console.log("Current path:", location.pathname);
   console.log("Token:", token);
   console.log("Is authenticated:", isAuthenticated);

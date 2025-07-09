@@ -9,16 +9,13 @@ import os
 app = Flask(__name__)
 CORS(app)
 
-# Required config for SQLAlchemy and JWT
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://myapp_data_user:NgwwTcLgrhoGMSNACh4FtsJmoauNVpAV@dpg-d1mgbaadbo4c73f9g7vg-a.oregon-postgres.render.com/myapp_data"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["JWT_SECRET_KEY"] = "your-secret-key-123"
 
-# Initialize JWT and DB
 jwt = JWTManager(app)
 init_db()
 
-# Register authentication routes
 app.register_blueprint(auth_bp, url_prefix="/api")
 
 # Test root route
@@ -26,7 +23,6 @@ app.register_blueprint(auth_bp, url_prefix="/api")
 def home():
     return jsonify({"message": "Auth API running"}), 200
 
-# ✅ THIS is the contest route you MUST have
 @app.route("/api/contests", methods=["GET"])
 def get_contests():
     try:
