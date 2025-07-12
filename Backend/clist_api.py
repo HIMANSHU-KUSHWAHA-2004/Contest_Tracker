@@ -1,8 +1,11 @@
 import requests
 from datetime import datetime
+from dotenv import load_dotenv
+import os
 
-USERNAME = "Himanshu_Kushwaha"
-API_KEY = "6fc01dae72a250c6941e04ead5cc61342c08a23a"
+load_dotenv()
+USER = os.getenv("USERNAME")
+KEY = os.getenv("API_KEY")
 
 TOP_SITES = {
     "codeforces.com",
@@ -22,7 +25,7 @@ def fetch_contests():
     # Fetch contests that haven't started yet (start time > current time)
     url = f"https://clist.by/api/v4/contest/?start__gt={now_utc}&limit=100&format=json"
     headers = {
-        "Authorization": f"ApiKey {USERNAME}:{API_KEY}"
+        "Authorization": f"ApiKey {USER}:{KEY}"
     }
 
     try:
@@ -56,7 +59,7 @@ def fetch_contests_including_ongoing():
     
     url = f"https://clist.by/api/v4/contest/?end__gt={now_utc}&limit=100&format=json"
     headers = {
-        "Authorization": f"ApiKey {USERNAME}:{API_KEY}"
+        "Authorization": f"ApiKey {USER}:{KEY}"
     }
 
     try:

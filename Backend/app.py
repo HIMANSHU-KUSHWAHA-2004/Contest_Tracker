@@ -2,16 +2,17 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from auth import auth_bp
+from dotenv import load_dotenv
 from models import init_db
 from clist_api import fetch_contests
 import os
 
 app = Flask(__name__)
 CORS(app)
-
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://myapp_data_user:NgwwTcLgrhoGMSNACh4FtsJmoauNVpAV@dpg-d1mgbaadbo4c73f9g7vg-a.oregon-postgres.render.com/myapp_data"
+load_dotenv()
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["JWT_SECRET_KEY"] = "your-secret-key-123"
+app.config["JWT_SECRET_KEY"] = os.getenv("SUPER_KEY")
 
 jwt = JWTManager(app)
 init_db()
