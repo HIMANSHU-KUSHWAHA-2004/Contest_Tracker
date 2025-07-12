@@ -19,6 +19,8 @@ init_db()
 app.register_blueprint(auth_bp, url_prefix="/api")
 
 # Test root route
+# python --> flask
+
 @app.route("/", methods=["GET"])
 def home():
     return jsonify({"message": "Auth API running"}), 200
