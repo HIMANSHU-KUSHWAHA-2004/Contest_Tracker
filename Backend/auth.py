@@ -52,23 +52,28 @@ def login():
     db = SessionLocal()
     try:
         data = request.get_json()
+        print("📨 Login payload:", data)
+
         email = data.get("email")
         password = data.get("password")
 
         if not email or not password:
+            print("❌ Missing email or password")
             return jsonify({"error": "Email and password required"}), 400
 
-        # Find user by email
         user = db.query(User).filter_by(email=email).first()
         if not user:
+            print("❌ No user found with that email")
             return jsonify({"error": "Invalid credentials"}), 401
 
-        # Check password
+        print("🔐 Checking password...")
         if not bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
+            print("❌ Password mismatch")
             return jsonify({"error": "Invalid credentials"}), 401
 
-        # Create token
         access_token = create_access_token(identity=str(user.id))
+        print("✅ Login success!")
+
         return jsonify({
             "token": access_token,
             "user": {
@@ -79,6 +84,7 @@ def login():
         }), 200
         
     except Exception as e:
+        print("🔥 Login error:", str(e))
         return jsonify({"error": "Login failed"}), 500
     finally:
         db.close()
