@@ -1,8 +1,9 @@
 import requests
 from datetime import datetime
+import get_api_key
 
 USERNAME = "Himanshu_Kushwaha"
-API_KEY = "6fc01dae72a250c6941e04ead5cc61342c08a23a"
+API_KEY = get_api_key.api
 
 TOP_SITES = {
     "codeforces.com",
